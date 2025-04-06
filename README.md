@@ -1,36 +1,43 @@
-# Cellular Modem
-This repository will showcases 5G cellular modem that includes various functionalities to simulate, analyze, and test different aspects of 5G communication. Here are the key functionalities along with their Python implementations:
+# 📶 Cellular Modem – 5G Communication System Simulator
 
-# Key Functionalities
+This repository presents a comprehensive simulation framework for a **5G cellular modem**, built in Python. It includes modular implementations of key physical and network layer functionalities to **simulate, analyze, and evaluate** various aspects of 5G wireless communication.
 
-* Modulation and Demodulation
-    - Implement 5G modulation schemes (QPSK, 16-QAM, 64-QAM, 256-QAM).
-    - Simulate signal transmission and reception.
+---
 
-* OFDM Transmission and Reception
-    - Implement Orthogonal Frequency Division Multiplexing (OFDM).
-    - Add cyclic prefix and perform IFFT/FFT.
+## 🚀 Core Functionalities
 
-* Channel Modeling
-    - Simulate different channel effects (AWGN, Rayleigh, Rician fading).
-    - Implement MIMO channel.
+### 🌀 Modulation & Demodulation
+- Supports key 5G modulation schemes: **QPSK**, **16-QAM**, **64-QAM**, and **256-QAM**
+- Simulates digital signal transmission and reception processes
 
-* Error Correction (Channel Coding)
-    - Implement LDPC or Polar coding.
-    - Simulate decoding with noise.
+### 📡 OFDM System Design
+- Implements **Orthogonal Frequency Division Multiplexing (OFDM)**
+- Includes IFFT/FFT operations, cyclic prefix addition/removal, and time-domain signal generation
 
-* Physical Layer Simulation
-    - Integrate modulation, OFDM, and channel models.
-    - Simulate BER vs SNR.
+### 🌐 Channel Modeling
+- Simulates common wireless channels: **AWGN**, **Rayleigh**, and **Rician** fading
+- Models **MIMO** channels for advanced antenna systems
 
-* Beamforming and MIMO
-    - Implement Massive MIMO beamforming.
-    - Use Singular Value Decomposition (SVD) for precoding.
+### 🛡️ Channel Coding & Error Correction
+- Implements modern error correction techniques such as **LDPC** and **Polar Codes**
+- Includes noisy decoding simulation for performance evaluation
 
-* Resource Allocation & Scheduling
-    - Implement dynamic scheduling of resources.
-    - Optimize subcarrier allocation for users.
+### ⚙️ Physical Layer Simulation
+- Integrates modulation, OFDM, and channel modeling into a full PHY pipeline
+- Simulates **Bit Error Rate (BER)** performance across varying **SNR** levels
 
-* Network Layer Simulation
-    - Implement 5G NR frame structure.
-    - Simulate handover scenarios.
+### 📶 Beamforming & MIMO
+- Supports **Massive MIMO** beamforming techniques
+- Utilizes **Singular Value Decomposition (SVD)** for MIMO precoding and spatial multiplexing
+
+### 📊 Resource Allocation & Scheduling
+- Implements **dynamic scheduling** strategies for subcarriers and time slots
+- Optimizes resource usage for multiple users under varying conditions
+
+### 🛰️ Network Layer Functionality
+- Models the **5G NR frame structure** and time-frequency resource grid
+- Simulates **handover scenarios** between base stations for mobility testing
+
+---
+
+## 📁 Folder Structure (Coming Soon)
