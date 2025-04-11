@@ -363,3 +363,27 @@ def demodulate_symbols(symbols, mod_scheme):
         bits.extend([(closest_idx >> i) & 1 for i in range(mod_config['bits_per_symbol']-1, -1, -1)])
     
     return np.array(bits)
+
+
+def plot_constellation_comparison(original, reconstructed, title='Original vs Reconstructed Symbols'):
+    """
+    Plots the original and reconstructed constellation symbols side-by-side.
+    
+    Parameters:
+    - original: array-like, complex symbols (original)
+    - reconstructed: array-like, complex symbols (reconstructed)
+    """
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
+    # Original constellation
+    scatterplot(np.real(original), np.imag(original), ax=axs[0])
+    axs[0].set_title("Original Symbols")
+
+    # Reconstructed constellation
+    scatterplot(np.real(reconstructed), np.imag(reconstructed), ax=axs[1])
+    axs[1].set_title("Reconstructed Symbols")
+
+    plt.suptitle(title, fontsize=16)
+    plt.tight_layout()
+    plt.show()
+
