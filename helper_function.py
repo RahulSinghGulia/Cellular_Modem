@@ -1,4 +1,19 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
+def get_modulation_config(mod_scheme):
+    """
+    Returns the bits per symbol and normalization factor for a given modulation scheme.
+    """
+    config = {
+        'BPSK': {'bits_per_symbol': 1, 'norm_factor': 1.0},
+        'QPSK': {'bits_per_symbol': 2, 'norm_factor': np.sqrt(2)},
+        '16-QAM': {'bits_per_symbol': 4, 'norm_factor': np.sqrt(10)},
+        '256-QAM': {'bits_per_symbol': 8, 'norm_factor': np.sqrt(170)},
+        '1024-QAM': {'bits_per_symbol': 10, 'norm_factor': np.sqrt(682)}
+    }
+    return config.get(mod_scheme, None)
+
 
 def symbols_gen(nsym, mod_scheme):
     """
@@ -122,7 +137,6 @@ def symbols_gen(nsym, mod_scheme):
 
     return data
 
-import matplotlib.pyplot as plt
 
 def scatterplot(x, y, ax=None):
     """
@@ -138,7 +152,7 @@ def scatterplot(x, y, ax=None):
     """
     
     if ax is None:
-        plt.figure(figsize=(6, 6))
+        plt.figure(figsize=(4,4))
         ax = plt.gca()
 
     # Plot the constellation points
@@ -159,3 +173,193 @@ def scatterplot(x, y, ax=None):
 
     return ax
 
+
+def plot_complex_signal(signal, ax=None, real_style='-b', imag_style='--r', title='I/Q Time-Domain Signal', xlabel='Time (Samples)', ylabel='Amplitude', grid=True, legend_loc='upper right', **kwargs):
+    """
+    Plots the real (In-phase) and imaginary (Quadrature) components of a complex signal.
+    
+    Parameters:
+    -----------
+    signal : array_like
+        Complex-valued signal to plot (e.g., OFDM time-domain signal).
+    ax : matplotlib.axes.Axes, optional
+        Axes object to plot on. If None, creates a new figure.
+    real_style : str, optional
+        Line style for the real component (default: '-b' for solid blue).
+    imag_style : str, optional
+        Line style for the imaginary component (default: '--r' for dashed red).
+    title : str, optional
+        Plot title (default: 'I/Q Time-Domain Signal').
+    xlabel : str, optional
+        X-axis label (default: 'Time (Samples)').
+    ylabel : str, optional
+        Y-axis label (default: 'Amplitude').
+    grid : bool, optional
+        Whether to show grid lines (default: True).
+    legend_loc : str, optional
+        Legend location (default: 'upper right').
+    **kwargs : dict
+        Additional keyword arguments passed to matplotlib's plot().
+    
+    Returns:
+    --------
+    matplotlib.axes.Axes
+        The axes object with the plotted signal.
+    """
+    if ax is None:
+        _, ax = plt.subplots(figsize=(10, 5))
+    
+    # Plot real and imaginary components
+    ax.plot(np.real(signal), real_style, label='In-phase (I)', **kwargs)
+    ax.plot(np.imag(signal), imag_style, label='Quadrature (Q)', **kwargs)
+    
+    # Customize plot
+    ax.set_title(title, fontsize=12)
+    ax.set_xlabel(xlabel, fontsize=10)
+    ax.set_ylabel(ylabel, fontsize=10)
+    ax.legend(loc=legend_loc, framealpha=0.8)
+    ax.grid(grid)
+    
+    return ax
+
+
+def add_awgn(signal, snr_db, measured_power=None, return_noise=False):
+    """
+    Adds Additive White Gaussian Noise (AWGN) to a complex signal at specified SNR.
+    
+    Parameters:
+    -----------
+    signal : array_like
+        Input signal (can be real or complex).
+    snr_db : float
+        Desired signal-to-noise ratio in decibels (dB).
+    measured_power : float, optional
+        If provided, uses this as the signal power instead of calculating it.
+    return_noise : bool, optional
+        If True, returns both noisy signal and noise vector (default: False).
+    
+    Returns:
+    --------
+    noisy_signal : ndarray
+        Input signal with AWGN added.
+    noise : ndarray, optional
+        Only returned if return_noise=True. The generated noise vector.
+    
+    Notes:
+    ------
+    - For complex signals, noise power is equally distributed in I & Q components.
+    - SNR is defined as: SNR(dB) = 10*log10(signal_power/noise_power)
+    """
+    # Convert SNR from dB to linear scale
+    snr_linear = 10 ** (snr_db / 10)
+    
+    # Calculate signal power (if not provided)
+    if measured_power is None:
+        signal_power = np.mean(np.abs(signal) ** 2)
+    else:
+        signal_power = measured_power
+    
+    # Calculate noise power
+    noise_power = signal_power / snr_linear
+    
+    # Generate complex Gaussian noise
+    if np.iscomplexobj(signal):
+        # For complex signals: split noise power equally between I & Q
+        noise_std = np.sqrt(noise_power / 2)
+        noise = (noise_std * np.random.randn(len(signal)) + 
+                1j * noise_std * np.random.randn(len(signal)))
+    else:
+        # For real signals: use full noise power in single dimension
+        noise_std = np.sqrt(noise_power)
+        noise = noise_std * np.random.randn(len(signal))
+    
+    # Add noise to signal
+    noisy_signal = signal + noise
+    
+    if return_noise:
+        return noisy_signal, noise
+    return noisy_signal
+
+
+def plot_constellation(received_signal, reference_symbols=None, ax=None, 
+                      received_style={'s': 20, 'alpha': 0.6, 'c': 'blue'},
+                      reference_style={'s': 120, 'marker': 'x', 'c': 'red'},
+                      title='Signal Constellation Diagram',
+                      xlabel='In-Phase Component (I)',
+                      ylabel='Quadrature Component (Q)',
+                      legend_loc='upper right',
+                      grid=True):
+    """
+    Plots a constellation diagram comparing received symbols against reference points.
+    
+    Parameters:
+    -----------
+    received_signal : array_like
+        Complex-valued received signal samples.
+    reference_symbols : array_like, optional
+        Ideal reference constellation points.
+    ax : matplotlib.axes.Axes, optional
+        Axes object to plot on. Creates new figure if None.
+    received_style : dict, optional
+        Style parameters for received symbols (passed to scatter).
+    reference_style : dict, optional
+        Style parameters for reference symbols (passed to scatter).
+    title : str, optional
+        Plot title.
+    xlabel : str, optional
+        X-axis label.
+    ylabel : str, optional
+        Y-axis label.
+    legend_loc : str or tuple, optional
+        Legend location.
+    grid : bool, optional
+        Whether to show grid.
+    
+    Returns:
+    --------
+    matplotlib.axes.Axes
+        The axes object with the constellation plot.
+    """
+    if ax is None:
+        _, ax = plt.subplots(figsize=(6, 6))
+    
+    # Plot received symbols
+    ax.scatter(np.real(received_signal), np.imag(received_signal), 
+              label='Received Symbols', **received_style)
+    
+    # Plot reference constellation if provided
+    if reference_symbols is not None:
+        ax.scatter(np.real(reference_symbols), np.imag(reference_symbols), 
+                  label='Reference Constellation', **reference_style)
+    
+    # Customize plot appearance
+    ax.set_title(title, fontsize=12)
+    ax.set_xlabel(xlabel, fontsize=10)
+    ax.set_ylabel(ylabel, fontsize=10)
+    ax.legend(loc=legend_loc)
+    ax.grid(grid)
+    ax.axis('equal')  # Ensure proper aspect ratio
+    
+    return ax
+
+
+def demodulate_symbols(symbols, mod_scheme):
+    """Demodulates symbols to bits using the specified modulation scheme."""
+    mod_config = get_modulation_config(mod_scheme)
+    if not mod_config:
+        raise ValueError(f"Unsupported modulation scheme: {mod_scheme}")
+    
+    # Get reference constellation
+    ref_symbols = symbols_gen(2**mod_config['bits_per_symbol'], mod_scheme)
+    unique_ref_symbols = np.unique(ref_symbols)
+    
+    bits = []
+    for sym in symbols:
+        # Find closest constellation point
+        distances = np.abs(sym - unique_ref_symbols)
+        closest_idx = np.argmin(distances)
+        
+        # Convert index to bits
+        bits.extend([(closest_idx >> i) & 1 for i in range(mod_config['bits_per_symbol']-1, -1, -1)])
+    
+    return np.array(bits)
