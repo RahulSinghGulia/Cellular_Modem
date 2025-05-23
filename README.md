@@ -41,10 +41,10 @@ This repository presents a comprehensive simulation framework for a **5G cellula
 ---
 
 ## 📁 Folder Structure (Coming Soon)
-modem_sim/
-│
-├── main.py                           # Entry point for the simulation
-├── config.py                         # Configuration of parameters (modulation, SNR, etc.)
+- modem_sim/
+- │
+- ├── main.py                           # Entry point for the simulation
+- ├── config.py                         # Configuration of parameters (modulation, SNR, etc.)
 │
 ├── transmitter/
 │   ├── source_encoder.py            # Converts input text/bits into bitstream
