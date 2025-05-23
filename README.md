@@ -3,10 +3,8 @@
 This repository presents a comprehensive simulation framework for a **5G cellular modem**, built in Python. It includes modular implementations of key physical and network layer functionalities to **simulate, analyze, and evaluate** various aspects of 5G wireless communication.
 
 ## 📁 Folder Structure 
-modem_sim/
-│
 
-├── main.py                           # Entry point for the simulation
+###├── main.py                           # Entry point for the simulation
 
 ├── config.py                         # Configuration of parameters (modulation, SNR, etc.)
 
