@@ -41,3 +41,33 @@ This repository presents a comprehensive simulation framework for a **5G cellula
 ---
 
 ## 📁 Folder Structure (Coming Soon)
+modem_sim/
+│
+├── main.py                           # Entry point for the simulation
+├── config.py                         # Configuration of parameters (modulation, SNR, etc.)
+│
+├── transmitter/
+│   ├── source_encoder.py            # Converts input text/bits into bitstream
+│   ├── channel_encoder.py           # Adds redundancy (e.g., convolutional, LDPC)
+│   ├── modulator.py                 # BPSK/QPSK/16QAM modulator
+│   ├── pulse_shaping.py             # (Optional) RRC filtering
+│
+├── channel/
+│   ├── awgn.py                      # Adds AWGN noise
+│   ├── fading.py                    # Multipath Rayleigh or Rician fading
+│   ├── synchronization.py          # Timing/frequency synchronization models
+│
+├── receiver/
+│   ├── demodulator.py              # Symbol demapping
+│   ├── channel_decoder.py          # FEC decoding
+│   ├── source_decoder.py           # Reconstructs original bitstream/text
+│
+├── utils/
+│   ├── bit_operations.py           # Bit-to-symbol conversions, SNR calculations
+│   ├── plotting.py                 # Eye diagrams, BER curves, constellations
+│   ├── metrics.py                  # BER, SER, PSNR computation
+│
+└── test/
+    ├── test_chain.py               # Unit tests or demo runs for each module
+
+
