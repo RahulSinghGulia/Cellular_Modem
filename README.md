@@ -10,45 +10,24 @@ This repository presents a comprehensive simulation framework for a **5G cellula
 
 - transmitter/
   - source_encoder.py             # Converts input text/bits into bitstream
+  - channel_encoder.py            # Adds redundancy (e.g., LDPC, Polar codes)
+  - modulator.py                  # BPSK/QPSK/16-QAM/64-QAM/256-QAM modulation
+  - pulse_shaping.py              # (Optional) RRC filtering for pulse shaping
 
-  │   ├── channel_encoder.py            # Adds redundancy (e.g., LDPC, Polar codes)
+- channel/
+  - awgn.py                       # Adds AWGN noise to the signal
+  - fading.py                     # Simulates Rayleigh/Rician fading
+  - synchronization.py           # Models timing and frequency synchronization
 
-  │   ├── modulator.py                  # BPSK/QPSK/16-QAM/64-QAM/256-QAM modulation
+- receiver/
+  - demodulator.py                # Demaps received symbols to bits
+  - channel_decoder.py            # FEC decoding (LDPC/Polar)
+  - source_decoder.py             # Reconstructs original input from bitstream
 
-  │   ├── pulse_shaping.py              # (Optional) RRC filtering for pulse shaping
+- utils/
+  - bit_operations.py             # Bit-level conversions and SNR utilities
+  - plotting.py                   # Eye diagrams, BER curves, constellations
+  - metrics.py                    # BER, SER, PSNR computation tools
 
-│
-
-├── channel/
-  
-  │   ├── awgn.py                       # Adds AWGN noise to the signal
-
-  │   ├── fading.py                     # Simulates Rayleigh/Rician fading
-
-  │   ├── synchronization.py           # Models timing and frequency synchronization
-
-│
-
-├── receiver/
-
-  │   ├── demodulator.py                # Demaps received symbols to bits
-
-  │   ├── channel_decoder.py            # FEC decoding (LDPC/Polar)
-
-  │   ├── source_decoder.py             # Reconstructs original input from bitstream
-
-│
-
-├── utils/
-
-  │   ├── bit_operations.py             # Bit-level conversions and SNR utilities
-
-  │   ├── plotting.py                   # Eye diagrams, BER curves, constellations
-
-  │   ├── metrics.py                    # BER, SER, PSNR computation tools
-
-│
-
-└── test/
-
-    ├── test_chain.py                 # Unit tests or demo simulations for each module
+- test/
+  - test_chain.py                 # Unit tests or demo simulations for each module
