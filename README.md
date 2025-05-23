@@ -4,15 +4,12 @@ This repository presents a comprehensive simulation framework for a **5G cellula
 
 ## 📁 Folder Structure 
 
-###├── main.py                           # Entry point for the simulation
+- main.py                           # Entry point for the simulation
 
-├── config.py                         # Configuration of parameters (modulation, SNR, etc.)
+- config.py                         # Configuration of parameters (modulation, SNR, etc.)
 
-│
-
-├── transmitter/
-
-  │   ├── source_encoder.py             # Converts input text/bits into bitstream
+- transmitter/
+  - source_encoder.py             # Converts input text/bits into bitstream
 
   │   ├── channel_encoder.py            # Adds redundancy (e.g., LDPC, Polar codes)
 
